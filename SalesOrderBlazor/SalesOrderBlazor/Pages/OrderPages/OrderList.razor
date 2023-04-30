@@ -1,0 +1,37 @@
+﻿@page "/OrderPages/OrderList"
+@using SalesOrderBlazor.Models
+@inject HttpClient Http
+<h3>OrderList</h3>
+@if(orders == null)
+{
+    <p><em>Loding...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Id</th>
+                <th>Name</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in orders)
+            {
+                <tr>
+                    <td>@item.OrderId</td>
+                    <td>@item.Name</td>
+                    <td>@item.State</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    public List<Order> orders { get; set; }
+    protected override async Task OnParametersSetAsync()
+    {
+        orders = await Http.GetFromJsonAsync<List<Order>>("https://localhost:7274/api/Order/getOrders");
+    }
+}

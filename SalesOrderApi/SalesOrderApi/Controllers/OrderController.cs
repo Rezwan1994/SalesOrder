@@ -85,7 +85,7 @@ namespace SalesOrderApi.Controllers
                         win.SubElements = subList;
                     }
                  }
-                model.Windows = winLis t;
+                model.Windows = winList;
             }
             var options = new JsonSerializerOptions
             {
