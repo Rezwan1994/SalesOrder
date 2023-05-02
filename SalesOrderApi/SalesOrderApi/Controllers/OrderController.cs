@@ -23,31 +23,41 @@ namespace SalesOrderApi.Controllers
         }
 
         [HttpPost("createOrder")]
-        public async Task<ActionResult<bool>> CreateOrder(Order order)
+        public async Task<ActionResult<bool>> CreateOrder(OrderModel orderModel)
         {
             try
             {
-                if (order != null)
+                if (orderModel != null)
                 {
-                    order.Name = "Testing";
-                    order.State = "CAaa";
-                    List<Window> windowList = new List<Window>();
-                    Window win = new Window();
-                    win.Name = "Testdd";
-                    win.TotalSubElements = "3";
-                    win.QuantityOfWindows = "4";
-                    List<SubElement> subList = new List<SubElement>();
-                    SubElement sub = new SubElement();
-                    sub.Element = "Testsdfsdf";
-                    sub.Height = "1sdf";
-                    sub.Width = "1df";
-                    sub.Type = "door";
-                    subList.Add(sub);
-                    win.SubElements = subList;
-                    windowList.Add(win);
-                    order.Windows = windowList;
+                    Order order = new Order();
+                    order.Name = orderModel.Name;
+                    order.State = orderModel.State;
+                    order.Windows= new List<Window>();
+                   
+                    foreach (var item in orderModel.Windows)
+                    {
+                        List<SubElement> subElemetList = new List<SubElement>(); 
+                        if (item.SubElements != null && item.SubElements.Count >0)
+                        {
+                            foreach(var subElement in item.SubElements)
+                            {
+                                subElemetList.Add(new SubElement() { 
+                                    Element = subElement.Element,
+                                    Type = subElement.Type,
+                                    Height = subElement.Height, 
+                                    Width = subElement.Width 
+                                });
+                            }
+                        }
+                        order.Windows.Add(new Window { 
+                            Name = item.Name, 
+                            QuantityOfWindows = item.QuantityOfWindows,
+                            TotalSubElements = item.TotalSubElements ,
+                            SubElements = subElemetList
+                        });
+                    }
                     
-                    _orderService.InsertAsync(order);
+                    await _orderService.InsertAsync(order);
                 }
 
                 return true;
@@ -85,7 +95,7 @@ namespace SalesOrderApi.Controllers
                         win.SubElements = subList;
                     }
                  }
-                model.Windows = winList;
+                //model.Windows = winList;
             }
             var options = new JsonSerializerOptions
             {

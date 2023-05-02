@@ -14,6 +14,6 @@ namespace SalesOrder.Domain.BusinessModel
         public string QuantityOfWindows { get; set; }
         public string TotalSubElements { get; set; }
         public int OrderId { get; set; }
-        public List<SubElement> SubElements { get; set; }
+        public List<SubElementModel> SubElements { get; set; }
     }
 }

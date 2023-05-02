@@ -36,7 +36,7 @@
             cursor: pointer;
         }
 </style>
-<EditForm Model="order" OnValidSubmit="@AddOrders">
+<EditForm Model="order">
     <DataAnnotationsValidator/>
     <div class="row">
         <div class="col-md-6">
@@ -51,16 +51,7 @@
                 <InputText class="form-control" @bind-Value="@order.State"></InputText>
                 <ValidationMessage For="@(()=>order.State)" />
             </div>
-            <div class="form-group">
-                <label>Name</label>
-                <InputText class="form-control" @bind-Value="@order.Name"></InputText>
-                <ValidationMessage For="@(()=>order.Name)" />
-            </div>
-            <div class="form-group">
-                <label>State</label>
-                <InputText class="form-control" @bind-Value="@order.State"></InputText>
-                <ValidationMessage For="@(()=>order.State)" />
-            </div>
+          
           
         </div>
         <div class="col-md-6" style="border:solid">
@@ -142,7 +133,7 @@
             </table>
         </div>
 
-        <button style="float:right;" type="submit" class="btn-info">Save</button>
+        <button style="float:right;" @onclick="AddOrders" class="btn-info">Save</button>
     </div>
     @if (showModal)
     {
@@ -183,7 +174,6 @@
     private bool showModal = false;
     Order order = new Order();
     Window window = new Window();
-
     SubElement sub = new SubElement();
     [Parameter]
     public Window windowObject { get; set; }
@@ -191,23 +181,28 @@
     public List<SubElement> subList = new List<SubElement>();
     async Task AddOrders()
     {
-
+        order.Windows = winList;
+        var data = await Http.PostAsJsonAsync<Order>("https://localhost:7274/api/Order/createOrder", order);
     }  
     async Task AddWindow()
     {
+        window.SubElements = new List<SubElement>();
         winList.Add(window);
         window = new Window();
+
     }
     async Task ShowPopUp(Window win)
     {
+        
         showModal = true;
         windowObject = win;
+       
     }
     async Task AddElement()
     {
-        subList.Add(sub);
-        windowObject.SubElements = subList;
-        subList = new List<SubElement>();
+        //subList.Add(sub);
+        windowObject.SubElements.Add(sub);
+        //subList = new List<SubElement>();
         sub = new SubElement();
         showModal = false;
     }
