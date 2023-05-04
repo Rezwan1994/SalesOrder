@@ -10,6 +10,6 @@ namespace SalesOrder.Repository.Interface
 {
     public interface IWindowRepository : IRepository<Window>
     {
-        //public List<Window> GetWindowsByOrderId(int orderId);
+        public List<WindowModel> GetWindowsByOrderId(int orderId);
     }
 }

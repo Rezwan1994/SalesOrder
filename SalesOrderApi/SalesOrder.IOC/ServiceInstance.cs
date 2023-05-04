@@ -2,9 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SalesOrder.Domain.DbContexts;
+using SalesOrder.Repository.Implementation;
+using SalesOrder.Repository.Interface;
 using SalesOrder.Repository.UnitOfWork;
 using SalesOrder.Service.Implementation;
 using SalesOrder.Service.Interface;
+using System;
 
 namespace SalesOrder.IOC
 {
@@ -17,9 +20,16 @@ namespace SalesOrder.IOC
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         
+         
+
             services.AddDbContext<SalesOrderDbContext>(options =>
-            options.UseSqlServer(connectionString, b => b.MigrationsAssembly("SalesOrderApi")),
-            ServiceLifetime.Singleton);
+            {
+                options.UseSqlServer(connectionString);
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("SalesOrderApi"));
+           
+        },ServiceLifetime.Scoped);
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
  
             
@@ -30,9 +40,9 @@ namespace SalesOrder.IOC
             services.AddTransient<ISubElementService, SubElementService>();
             //services.AddTransient<IClassService, ClassService>();
             //services.AddTransient<ITeacherEnrollmentService, TeacherEnrollmentService>();
-            //services.AddTransient<ITeacherEnrollmentRepository, TeacherEnrollmentRepository>();
-            //services.AddTransient<ITeacherRepository, TeacherRepository>();
-            //services.AddTransient<IStudentRepository, StudentRepository>();
+            services.AddTransient<ISubElementRepository, SubElementRepository>();
+            services.AddTransient<IWindowRepository, WindowRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
 
         }
     }

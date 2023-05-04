@@ -30,7 +30,7 @@ namespace SalesOrder.Repository.Implementation
         {
             if (_dbContext.Entry(entityToUpdate).State == EntityState.Detached)
             {
-                _dbSet.Attach(entityToUpdate);
+                _dbSet.Update(entityToUpdate);
             }
             _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
         }

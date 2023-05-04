@@ -14,19 +14,20 @@ namespace SalesOrder.Service.Implementation
     public class OrderService : BaseService<Order>, IOrderService
     {
         private readonly IRepository<Order> _orderRepository;
+        private readonly IOrderRepository _orderExtRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public OrderService(IUnitOfWork unitOfWork)
+        public OrderService(IUnitOfWork unitOfWork, IOrderRepository orderExtRepository)
             : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _orderRepository = unitOfWork.Repository<Order>();
-        
+            _orderExtRepository = orderExtRepository;
         }
 
-        public OrderModel GetOrderDetailsByOrderId(int orderId)
+        public Order GetOrderDetailsByOrderId(int orderId)
         {
         
-            return null;
+            return _orderExtRepository.GetOrderDetailsByOrderId(orderId);
         }
     }
 }

@@ -10,6 +10,6 @@ namespace SalesOrder.Repository.Interface
 {
     public interface IOrderRepository:IRepository<Order>
     {
-        public List<OrderModel> GetOrderDetailsByOrderId(int orderId);
+        public Order GetOrderDetailsByOrderId(int orderId);
     }
 }

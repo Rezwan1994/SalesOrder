@@ -13,8 +13,8 @@ namespace SalesOrder.Domain.Entities
         public int SubElementId { get; set; }
         public string Element { get; set; }
         public string Type { get; set; }
-        public string Width { get; set; }
-        public string Height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public int WindowId { get; set; }
         public Window Window { get; set; }
     }

@@ -5,7 +5,7 @@
 namespace SalesOrderApi.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatingSalesOrderTable : Migration
+    public partial class CreatingSalesTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,8 @@ namespace SalesOrderApi.Data.Migrations
                     WindowId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QuantityOfWindows = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalSubElements = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QuantityOfWindows = table.Column<int>(type: "int", nullable: false),
+                    TotalSubElements = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -54,8 +54,8 @@ namespace SalesOrderApi.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Element = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Width = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Height = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Width = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false),
                     WindowId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

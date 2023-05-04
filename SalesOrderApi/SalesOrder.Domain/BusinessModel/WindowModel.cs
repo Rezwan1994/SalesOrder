@@ -11,9 +11,10 @@ namespace SalesOrder.Domain.BusinessModel
     {
         public int WindowId { get; set; }
         public string Name { get; set; }
-        public string QuantityOfWindows { get; set; }
-        public string TotalSubElements { get; set; }
+        public int QuantityOfWindows { get; set; }
+        public int TotalSubElements { get; set; }
         public int OrderId { get; set; }
         public List<SubElementModel> SubElements { get; set; }
     }
 }
+

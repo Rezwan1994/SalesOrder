@@ -15,20 +15,20 @@ namespace SalesOrder.Service.Implementation
     public class WindowService : BaseService<Window>,IWindowService
     {
         private readonly IRepository<Window> _windowRepository;
-        private readonly IWindowRepository _orderExtRepository;
+        private readonly IWindowRepository _windowExtRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public WindowService(IUnitOfWork unitOfWork)
+        public WindowService(IUnitOfWork unitOfWork, IWindowRepository windowExtRepository)
             : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _windowRepository = unitOfWork.Repository<Window>();
-
+            _windowExtRepository = windowExtRepository;
         }
 
-        public List<Window> GetWindowsByOrderId(int orderId)
+        public List<WindowModel> GetWindowsByOrderId(int orderId)
         {
             var qry = string.Format("Select * from Windows where OrderId = {0}", orderId);
-            return _windowRepository.Query(qry).ToList();
+            return _windowExtRepository.GetWindowsByOrderId(orderId);
         }
     }
 }

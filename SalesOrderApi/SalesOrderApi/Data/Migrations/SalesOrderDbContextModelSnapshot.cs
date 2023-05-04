@@ -54,17 +54,15 @@ namespace SalesOrderApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Height")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Width")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
 
                     b.Property<int>("WindowId")
                         .HasColumnType("int");
@@ -91,13 +89,11 @@ namespace SalesOrderApi.Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("QuantityOfWindows")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("QuantityOfWindows")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TotalSubElements")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TotalSubElements")
+                        .HasColumnType("int");
 
                     b.HasKey("WindowId");
 

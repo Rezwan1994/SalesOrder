@@ -11,8 +11,8 @@ using SalesOrder.Domain.DbContexts;
 namespace SalesOrderApi.Data.Migrations
 {
     [DbContext(typeof(SalesOrderDbContext))]
-    [Migration("20230428160027_CreatingSalesOrderTable")]
-    partial class CreatingSalesOrderTable
+    [Migration("20230504061427_CreatingSalesTable")]
+    partial class CreatingSalesTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,17 +57,15 @@ namespace SalesOrderApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Height")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Width")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
 
                     b.Property<int>("WindowId")
                         .HasColumnType("int");
@@ -94,13 +92,11 @@ namespace SalesOrderApi.Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("QuantityOfWindows")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("QuantityOfWindows")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TotalSubElements")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TotalSubElements")
+                        .HasColumnType("int");
 
                     b.HasKey("WindowId");
 

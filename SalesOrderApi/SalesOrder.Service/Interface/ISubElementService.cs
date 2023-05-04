@@ -1,4 +1,5 @@
-﻿using SalesOrder.Domain.Entities;
+﻿using SalesOrder.Domain.BusinessModel;
+using SalesOrder.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace SalesOrder.Service.Interface
 {
     public interface ISubElementService : IBaseService<SubElement>
     {
-        public List<SubElement> GetSubElementByWindowId(int windowId);
+        public List<SubElementModel> GetSubElementByWindowId(int windowId);
     }
 }

@@ -1,7 +1,8 @@
-﻿@page "/OrderPages/AddOrder"
+﻿@page "/OrderPages/AddOrder/{Id:int?}"
 @using SalesOrderBlazor.Models
-
+@inject NavigationManager NavigationManager
 @inject HttpClient Http
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-+/oyKj/mQvw71zAmRlpqpJOK01jCpOUZOZnPxTPd0r3qfJG1jcaNHQbIn0NVenRJ1zbL+LZpYB9X+jJ6p97PzA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
     .modal {
         display: block;
@@ -36,9 +37,14 @@
             cursor: pointer;
         }
 </style>
-<EditForm Model="order">
+<h3 style="color:green;">@message</h3>
+
+<EditForm Model="order" OnValidSubmit="AddOrders">
+    <div class="col-md-12">
+        <button type="submit" style="float:right; width:130px" class="btn-success">Save</button>
+    </div>
     <DataAnnotationsValidator/>
-    <div class="row">
+    <div>
         <div class="col-md-6">
             <h3>AddOrder</h3>
             <div class="form-group">
@@ -54,9 +60,14 @@
           
           
         </div>
-        <div class="col-md-6" style="border:solid">
+     </div>
+</EditForm>
+<EditForm Model="window" OnValidSubmit="AddWindow">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-md-6">
             <h3>Add Window</h3>
-           
+
             <div class="form-group">
                 <label>Name</label>
                 <InputText class="form-control" @bind-Value="@window.Name"></InputText>
@@ -64,17 +75,20 @@
             </div>
             <div class="form-group">
                 <label>Quantity Of Windows</label>
-                <InputText class="form-control" @bind-Value="@window.QuantityOfWindows"></InputText>
+                <InputNumber class="form-control" @bind-Value="@window.QuantityOfWindows"></InputNumber>
                 <ValidationMessage For="@(()=>window.QuantityOfWindows)" />
             </div>
             <div class="form-group">
                 <label>Total Sub Elements</label>
-                <InputText class="form-control" @bind-Value="@window.TotalSubElements"></InputText>
+                <InputNumber class="form-control" @bind-Value="@window.TotalSubElements" readonly></InputNumber>
                 <ValidationMessage For="@(()=>window.TotalSubElements)" />
             </div>
-            <button @onclick="AddWindow" class="btn-info">Add</button>
+            <button type="submit" style="margin-top:10px" class="btn-success">Add</button>
         </div>
-
+    </div>
+ 
+</EditForm>
+    <div class="row">
         <div class="col-md-12">
             <h3>Window List</h3>
             <table class="table">
@@ -83,6 +97,7 @@
                         <th>Name</th>
                         <th>QuantityOfWindows</th>
                         <th>TotalSubElements</th>
+                        <th>SubElements</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -93,10 +108,7 @@
                             <td>@item.Name</td>
                             <td>@item.QuantityOfWindows</td>
                             <td>@item.TotalSubElements</td>
-                            <td>
-                                <button  @onclick="() => ShowPopUp(item)" class="btn-info">Add Element</button>
-                                
-                            </td>
+
                             <td>
                                 <table class="table">
                                     <thead>
@@ -105,10 +117,11 @@
                                             <th>Type</th>
                                             <th>Width</th>
                                             <th>Height</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(item.SubElements != null && item.SubElements.Count > 0)
+                                        @if (item.SubElements != null && item.SubElements.Count > 0)
                                         {
                                             @foreach (var element in item.SubElements)
                                             {
@@ -119,22 +132,31 @@
                                                     <td>
                                                         @element.Height
                                                     </td>
-
+                                                    <td>
+                                                        <button @onclick="() => DeleteSubElement(item,element)" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+                                                    </td>
                                                 </tr>
                                             }
                                         }
-                                     
+
                                     </tbody>
                                 </table>
+                            </td>
+                            <td>
+                                <button @onclick="() => ShowPopUp(item)" class="btn-success">Add Element</button>
+                                <button @onclick="() => DeleteWindow(item)" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-        </div>
 
-        <button style="float:right;" @onclick="AddOrders" class="btn-info">Save</button>
+        </div>
     </div>
+       
+<EditForm Model="sub" OnValidSubmit="AddElement">
+    <DataAnnotationsValidator />
+  <ValidationSummary/>
     @if (showModal)
     {
         <div class="modal">
@@ -154,23 +176,24 @@
                     </div>
                     <div class="form-group">
                         <label>Width</label>
-                        <InputText class="form-control" @bind-Value="@sub.Width"></InputText>
+                        <InputNumber class="form-control" @bind-Value="@sub.Width"></InputNumber>
                         <ValidationMessage For="@(()=>sub.Width)" />
                     </div>
 
                     <div class="form-group">
                         <label>Height</label>
-                        <InputText class="form-control" @bind-Value="@sub.Height"></InputText>
+                        <InputNumber class="form-control" @bind-Value="@sub.Height"></InputNumber>
                         <ValidationMessage For="@(()=>sub.Height)" />
                     </div>
-                <button @onclick="AddElement" class="btn-info">Add</button>
+                <button type="submit" style="margin-top:10px;"  class="btn-success">Add</button>
 
             </div>
         </div>
     }
 </EditForm>
 @code {
-
+    [Parameter]
+    public int? Id { get; set; }
     private bool showModal = false;
     Order order = new Order();
     Window window = new Window();
@@ -179,32 +202,68 @@
     public Window windowObject { get; set; }
     public List<Window> winList = new List<Window>();
     public List<SubElement> subList = new List<SubElement>();
+    string message = "";
     async Task AddOrders()
     {
         order.Windows = winList;
-        var data = await Http.PostAsJsonAsync<Order>("https://localhost:7274/api/Order/createOrder", order);
+        if(order.OrderId == 0)
+        {
+            var data = await Http.PostAsJsonAsync<Order>("https://localhost:7274/api/Order/createOrder", order);
+            NavigationManager.NavigateTo("OrderPages/OrderList");
+        }
+        else
+        {
+            var data = await Http.PostAsJsonAsync<Order>("https://localhost:7274/api/Order/editOrder", order);
+            message = "Order updated successfully";
+        }
+
     }  
     async Task AddWindow()
     {
         window.SubElements = new List<SubElement>();
         winList.Add(window);
         window = new Window();
-
     }
     async Task ShowPopUp(Window win)
     {
-        
         showModal = true;
         windowObject = win;
-       
+    }
+    async Task DeleteWindow(Window win)
+    {
+        winList.Remove(win);
+        if (win.WindowId != 0)
+        {
+            var data = await Http.DeleteAsync("https://localhost:7274/api/Order/deleteWindow/" + win.WindowId);
+        }
+    }
+
+    async Task DeleteSubElement(Window win, SubElement element)
+    {
+        win.SubElements.Remove(element);
+        if (element.SubElementId != 0)
+        {
+            var data = await Http.DeleteAsync("https://localhost:7274/api/Order/DeleteSubElement/" + element.SubElementId);
+        }
     }
     async Task AddElement()
     {
-        //subList.Add(sub);
         windowObject.SubElements.Add(sub);
-        //subList = new List<SubElement>();
+        windowObject.TotalSubElements = windowObject.SubElements.Count;
         sub = new SubElement();
         showModal = false;
     }
-
+    private async Task<Order> MakeOrderRequestAsync()
+    {
+        var response = await Http.GetFromJsonAsync<Order>("https://localhost:7274/api/Order/getOrderDetails/" + Id);
+        return response;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        if(Id.HasValue)
+        {
+            order = await MakeOrderRequestAsync();
+            winList = order.Windows;
+        }
+    }
 }

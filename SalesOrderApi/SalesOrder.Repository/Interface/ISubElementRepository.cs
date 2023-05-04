@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesOrder.Service.Interface
+namespace SalesOrder.Repository.Interface
 {
-    public interface IOrderService : IBaseService<Order>
+    public interface ISubElementRepository : IRepository<SubElement>
     {
-        public Order GetOrderDetailsByOrderId(int orderId);
+        public List<SubElementModel> GetSubElementByWindowId(int windowId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using SalesOrder.Domain.BusinessModel;
+﻿using Microsoft.EntityFrameworkCore;
+using SalesOrder.Domain.BusinessModel;
 using SalesOrder.Domain.DbContexts;
 using SalesOrder.Domain.Entities;
 using SalesOrder.Repository.Interface;
@@ -17,20 +18,11 @@ namespace SalesOrder.Repository.Implementation
         {
             _context = context;
         }
-        public List<OrderModel> GetOrderDetailsByOrderId(int orderId)
+        public Order GetOrderDetailsByOrderId(int orderId)
         {
+            var orders = _context.Orders.Where(x => x.OrderId == orderId).Include(w => w.Windows).ThenInclude(s => s.SubElements).FirstOrDefault();
 
-            //var order = _orderRe
-            ////OrderModel model = new OrderModel();
-
-            ////string rawQuery = @"select * from Students s
-            ////                left join StudentClassMaps sm on sm.StudentId = s.StudentId
-            ////                left join Classes c on c.ClassId = '{0}'";
-            ////string sqlQuery = string.Format(rawQuery, classId);
-            ////var orderList = _context.or
-            ////var studentList = _context.ExecSQL<Student>(sqlQuery).ToList();
-
-            return null;
+            return orders;
         }
     }
 }
